@@ -39,6 +39,11 @@ public:
 	{
 		Timer timer;
 
+		// Renderer resize
+		// Renderer render
+
+
+
 		if (!m_Image || m_ViewportWidth != m_Image->GetWidth() || m_ViewportHeight != m_Image->GetHeight())
 		{
 			m_Image = std::make_shared<Image>(m_ViewportWidth, m_ViewportHeight, ImageFormat::RGBA);
