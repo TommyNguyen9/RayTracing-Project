@@ -1,11 +1,6 @@
 #include "Renderer.h"
 #include "Walnut/Random.h"
 
-void Renderer::Render()
-{
-	// Render all pixels
-}
-
 void Renderer::OnResize(uint32_t width, uint32_t height)
 {
 	if (m_FinalImage)
