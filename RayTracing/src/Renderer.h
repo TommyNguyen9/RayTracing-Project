@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Walnut/Image.h"
+#include "Camera.h"
 
 #include <memory>
 
@@ -12,7 +13,7 @@ public:
 	Renderer() = default;
 
 	void OnResize(uint32_t width, uint32_t height);
-	void Render();
+	void Render(const Camera& camera);
 
 	std::shared_ptr<Walnut::Image> GetFinalImage() const { return m_FinalImage; }
 private:

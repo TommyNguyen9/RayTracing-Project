@@ -36,8 +36,11 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 
 }
 
-void Renderer::Render()
+void Renderer::Render(const Camera& camera)
 {
+	const glm::vec3& rayOrigin = camera.GetPosition();
+	const glm::vec3& rayDirection = camera.GetRayDirections();
+
 	for (uint32_t y = 0; y < m_FinalImage->GetHeight(); y++)
 	{
 		for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++)
