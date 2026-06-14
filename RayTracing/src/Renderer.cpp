@@ -75,37 +75,52 @@ glm::vec4 Renderer::TraceRay(const Scene &scene, const Ray& ray)
 	if (scene.Spheres.size() == 0)
 		return glm::vec4(0, 0, 0, 1);
 
-	const Sphere& sphere = scene.Spheres[0];
+	const Sphere* closestSphere = nullptr;
+	float hitDistance = FLT_MAX;
+
+	for (const Sphere& sphere : scene.Spheres)
+	{
+		glm::vec3 origin = ray.Origin - sphere.Position;
+
+		float a = glm::dot(ray.Direction, ray.Direction);
+		float b = 2.0f * glm::dot(origin, ray.Direction);
+		float c = glm::dot(origin, origin) - sphere.Radius * sphere.Radius;
+
+		// Quadratic formula discriminant:
+		// b^2 - 4ac
 
 
-	glm::vec3 origin = ray.Origin - sphere.Position;
 
-	float a = glm::dot(ray.Direction, ray.Direction);
-	float b = 2.0f * glm::dot(origin, ray.Direction);
-	float c = glm::dot(origin, origin) - sphere.Radius * sphere.Radius;
+		float discriminant = b * b - 4.0f * a * c;
 
-	// Quadratic formula discriminant:
-	// b^2 - 4ac
+		if (discriminant < 0.0f)
+			continue;
 
-	
+		// (-b +- sqrt(discriminant)) / 2a
+		// 
+		// float t0 = (-b + glm::sqrt(discriminant)) / (2.0f * a);
+		float closestT = (-b - glm::sqrt(discriminant)) / (2.0f * a);
+		
+		if (closestT < hitDistance)
+		{
+			hitDistance = closestT;
+			closestSphere = &sphere;
+		}
 
-	float discriminant = b * b - 4.0f * a * c;
+	}
 
-	if (discriminant < 0.0f)
-		return glm::vec4(0, 0, 0, 1);
+	if (closestSphere == nullptr)
+		return glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	// (-b +- sqrt(discriminant)) / 2a
-	float t0 = (- b + glm::sqrt(discriminant)) / (2.0f * a);
-	float closestT = (-b - glm::sqrt(discriminant)) / (2.0f * a);
-
-	glm::vec3 hitPoint = origin + ray.Direction * closestT;
+	glm::vec3 origin = ray.Origin - closestSphere->Position;
+	glm::vec3 hitPoint = origin + ray.Direction * hitDistance;
 	glm::vec3 normal = glm::normalize(hitPoint);
 
 	glm::vec3 lightDir = glm::normalize(glm::vec3(-1, -1, -1));
 
 	float d = glm::max(glm::dot(normal, -lightDir), 0.0f); // cos(angle)
 
-	glm::vec3 sphereColor = sphere.Albedo;
+	glm::vec3 sphereColor = closestSphere->Albedo;
 	sphereColor *= d;
 	return glm::vec4(sphereColor, 1.0f);
 }
