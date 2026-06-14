@@ -2,7 +2,7 @@
 
 #include "Walnut/Image.h"
 #include "Camera.h"
-
+#include "Ray.h"
 #include <memory>
 
 #include <glm/glm.hpp>
@@ -17,7 +17,7 @@ public:
 
 	std::shared_ptr<Walnut::Image> GetFinalImage() const { return m_FinalImage; }
 private:
-	glm::vec4 PerPixel(glm::vec2 coord);
+	glm::vec4 TraceRay(const Ray& ray);
 
 private:
 	std::shared_ptr<Walnut::Image> m_FinalImage;
