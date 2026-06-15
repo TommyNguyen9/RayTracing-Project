@@ -79,7 +79,6 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 			color += skyColor * multiplier;
 			break;
 
-
 		}
 
 		glm::vec3 lightDir = glm::normalize(glm::vec3(-1, -1, -1));
@@ -91,6 +90,9 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 		color += sphereColor * multiplier;
 
 		multiplier *= 0.7f;
+
+		ray.Origin = payload.WorldPosition + payload.WorldNormal * 0.0001f;
+		ray.Direction = glm::reflect(ray.Direction, payload.WorldNormal);
 	}
 	
 	return glm::vec4(color, 1.0f);
@@ -134,7 +136,7 @@ Renderer::HitPayload Renderer::TraceRay(const Ray& ray)
 		// float t0 = (-b + glm::sqrt(discriminant)) / (2.0f * a);
 		float closestT = (-b - glm::sqrt(discriminant)) / (2.0f * a);
 		
-		if (closestT < hitDistance)
+		if (closestT > 0.0f && closestT < hitDistance)
 		{
 			hitDistance = closestT;
 			closestSphere = (int)i;
