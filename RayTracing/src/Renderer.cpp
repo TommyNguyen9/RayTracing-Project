@@ -38,20 +38,18 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 
 void Renderer::Render(const Scene &scene, const Camera& camera)
 {
-	const glm::vec3& rayOrigin = camera.GetPosition();
+	m_ActiveScene = &scene;
+	m_ActiveCamera = &camera;
 
-	Ray ray;
-	ray.Origin = camera.GetPosition();
+	
 	
 
 	for (uint32_t y = 0; y < m_FinalImage->GetHeight(); y++)
 	{
 		for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++)
 		{
-			
-			ray.Direction = camera.GetRayDirections()[x + y * m_FinalImage->GetWidth()];
-	
-			glm::vec4 color = TraceRay(scene, ray);
+		
+			glm::vec4 color = PerPixel(x, y);
 			color = glm::clamp(color, glm::vec4(0.0f), glm::vec4(1.0f));
 			m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(color);
 
@@ -60,6 +58,13 @@ void Renderer::Render(const Scene &scene, const Camera& camera)
 
 
 	m_FinalImage->SetData(m_ImageData);
+}
+
+glm::vec4 Renderer::PerPixel()
+{
+	Ray ray;
+	ray.Origin = m_ActiveCamera->GetPosition();
+	ray.Direction = m_ActiveCamera->GetRayDirections()[x + y * m_FinalImage->GetWidth()];
 }
 
 glm::vec4 Renderer::TraceRay(const Scene &scene, const Ray& ray)
@@ -124,3 +129,20 @@ glm::vec4 Renderer::TraceRay(const Scene &scene, const Ray& ray)
 	sphereColor *= d;
 	return glm::vec4(sphereColor, 1.0f);
 }
+
+Renderer::HitPayload Renderer::TraceRay(const Ray& ray)
+{
+
+}
+
+Renderer::HitPayload Renderer::ClosestHit(const Ray& ray, float hitDistance, uint32_t objectIndex)
+{
+
+}
+
+Renderer::HitPayload Renderer::Miss(const Ray& ray)
+{
+
+}
+
+
