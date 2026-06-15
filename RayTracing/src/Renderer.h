@@ -25,13 +25,13 @@ private:
 		glm::vec3 WorldNormal;
 		glm::vec3 WorldPosition;
 
-		uint32_t ObjectIndex;
+		int ObjectIndex;
 	};
 
 	glm::vec4 PerPixel(uint32_t x, uint32_t y); // RayGen Shader
 
 	HitPayload TraceRay(const Ray& ray);
-	HitPayload ClosestHit(const Ray& ray, float hitDistance, uint32_t objectIndex);
+	HitPayload ClosestHit(const Ray& ray, float hitDistance, int objectIndex);
 	HitPayload Miss(const Ray& ray);
 
 private:
