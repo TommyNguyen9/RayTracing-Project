@@ -85,7 +85,7 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 		float lightIntensity = glm::max(glm::dot(payload.WorldNormal, -lightDir), 0.0f); // cos(angle)
 
 		const Sphere& sphere = m_ActiveScene->Spheres[payload.ObjectIndex];
-		glm::vec3 sphereColor = sphere.Albedo;
+		glm::vec3 sphereColor = sphere.Mat.Albedo;
 		sphereColor *= lightIntensity;
 		color += sphereColor * multiplier;
 
