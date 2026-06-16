@@ -56,9 +56,15 @@ public:
 		ImGui::Begin("Settings");
 		ImGui::Text("Last Render: %.3fms", m_LastRenderTime);
 			if (ImGui::Button("Render"))
-		{
-			Render();
-		}
+			{
+				Render();
+			}
+
+			ImGui::Checkbox("Accumulate", &m_Renderer.GetSettings().Accumulate);
+
+			if (ImGui::Button("Reset"))
+				m_Renderer.ResetFrameIndex();
+
 		ImGui::End();
 
 		ImGui::Begin("Scene");
