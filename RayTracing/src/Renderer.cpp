@@ -56,8 +56,11 @@ void Renderer::Render(const Scene &scene, const Camera& camera)
 			glm::vec4 color = PerPixel(x, y);
 			m_AccumulationData[x + y * m_FinalImage->GetWidth()] += color;
 
-			color = glm::clamp(color, glm::vec4(0.0f), glm::vec4(1.0f));
-			m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(color);
+			glm::vec4 accumulatedColor = m_AccumulationData[x + y * m_FinalImage->GetWidth()];
+			accumulatedColor /= (float)m_FrameIndex;
+
+			accumulatedColor = glm::clamp(color, glm::vec4(0.0f), glm::vec4(1.0f));
+			m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(accumulatedColor);
 
 		}
 	}
