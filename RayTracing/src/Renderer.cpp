@@ -55,15 +55,14 @@ void Renderer::Render(const Scene &scene, const Camera& camera)
 	if (m_FrameIndex == 1)
 		memset(m_AccumulationData, 0, m_FinalImage->GetWidth() * m_FinalImage->GetHeight() * sizeof(glm::vec4));
 
-#define MT 1
+#define MT 0
 #if MT
-
 
 	// 2m pixels
 	std::for_each(std::execution::par, m_ImageVerticalIter.begin(), m_ImageVerticalIter.end(),
 		[this](uint32_t y) 
 		{
-#if 0
+
 			std::for_each(std::execution::par, m_ImageHorizontalIter.begin(), m_ImageHorizontalIter.end(),
 				[this, y](uint32_t x)
 				{
@@ -75,27 +74,10 @@ void Renderer::Render(const Scene &scene, const Camera& camera)
 
 					accumulatedColor = glm::clamp(accumulatedColor, glm::vec4(0.0f), glm::vec4(1.0f));
 					m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(accumulatedColor);
-				
-				
+					
 				});
-
-#endif
-
 	
-		for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++)
-		{
-		
-			glm::vec4 color = PerPixel(x, y);
-			m_AccumulationData[x + y * m_FinalImage->GetWidth()] += color;
-
-			glm::vec4 accumulatedColor = m_AccumulationData[x + y * m_FinalImage->GetWidth()];
-			accumulatedColor /= (float)m_FrameIndex;
-
-			accumulatedColor = glm::clamp(accumulatedColor, glm::vec4(0.0f), glm::vec4(1.0f));
-			m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(accumulatedColor);
-
-		}
-	});
+	    });
 #else
 
 	for (uint32_t y = 0; y < m_FinalImage->GetHeight(); y++)
