@@ -108,7 +108,7 @@ public:
 			ImGui::DragFloat("Roughness", &material.Roughness, 0.05f, 0.0f, 1.0f);
 			ImGui::DragFloat("Metallic", &material.Metallic, 0.05f, 0.0f, 1.0f);
 			ImGui::ColorEdit3("Emission Color", glm::value_ptr(material.EmissionColor));
-			ImGui::DragFloat("Emission Power", &material.Metallic, 0.05f, 0.0f, FLT_MAX);
+			ImGui::DragFloat("Emission Power", &material.EmissionPower, 0.05f, 0.0f, FLT_MAX);
 
 			ImGui::Separator();
 
