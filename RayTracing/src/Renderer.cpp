@@ -142,9 +142,14 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 	glm::vec3 light(0.0f);
 	glm::vec3 contribution(1.0f);
 
+	uint32_t seed = x + y * m_FinalImage->GetWidth();
+	seed *= m_FrameIndex;
+
 	int bounces = 8;
 	for (int i = 0; i < bounces; i++)
 	{
+		seed += i;
+
 		Renderer::HitPayload payload = TraceRay(ray);
 		if (payload.HitDistance < 0.0f)
 		{
@@ -161,7 +166,11 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 		contribution *= material.Albedo; // 1.0, 1.0, 1.0
 
 		ray.Origin = payload.WorldPosition + payload.WorldNormal * 0.0001f;
-		ray.Direction = glm::normalize(payload.WorldNormal + Walnut::Random::InUnitSphere());
+
+		if (m_Settings.SlowRandom)
+			ray.Direction = glm::normalize(payload.WorldNormal + Walnut::Random::InUnitSphere());
+		else
+			ray.Direction = glm::normalize(payload.WorldNormal + Utils::InUnitSphere(seed));
 	}
 	
 	return glm::vec4(light, 1.0f);
