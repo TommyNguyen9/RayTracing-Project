@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include <execution>
+#include <vector>
 
 namespace Utils {
 	
@@ -23,6 +24,23 @@ namespace Utils {
 		uint32_t word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277883737u;
 		return (word >> 22u) ^ word;
 	}
+
+	static float RandomFloat(uint32_t& seed)
+	{
+		seed = PCG_Hash(seed);
+		return (float)seed / (float)std::numeric_limits<uint32_t>::max();
+		
+	}
+
+	static glm::vec3 InUnitSphere(uint32_t& seed)
+	{
+		return glm::normalize(glm::vec3(RandomFloat(seed) * 2.0f - 1.0f,
+			RandomFloat(seed) * 2.0f - 1.0f,
+			RandomFloat(seed) * 2.0f - 1.0f)
+			);
+	}
+
+
 }
 
 void Renderer::OnResize(uint32_t width, uint32_t height)
